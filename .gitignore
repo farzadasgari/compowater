@@ -1,0 +1,75 @@
+# Compowater - Scientific Research Project
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python build files
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environment
+venv/
+*.env
+
+# PyCharm / JetBrains IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+
+# Scientific computing temporary files
+*.nc~
+*.csv~
+*.xlsx~
+*.pickle
+*.pkl
+*.joblib
+
+# Large datasets
+data/raw/*
+data/intermediate/*
+data/processed/*
+!data/**/README.md
+
+# Generated outputs
+outputs/figures/*
+outputs/tables/*
+outputs/models/*
+outputs/logs/*
+!outputs/**/README.md
+
+# Local configuration
+*.local.yaml
+*.local.yml
+
+# Coverage / Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Documentation builds
+docs/_build/
+
+# OS / Editor backups
+*~
