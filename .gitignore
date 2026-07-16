@@ -21,6 +21,9 @@ venv/
 *.ipr
 *.iws
 
+# VSCode
+.vscode/
+
 # Jupyter Notebook
 .ipynb_checkpoints/
 
