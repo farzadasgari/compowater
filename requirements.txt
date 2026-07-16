@@ -5,3 +5,10 @@ xarray
 netCDF4
 matplotlib
 seaborn
+geopandas
+shapely
+rasterio
+rioxarray
+pyproj
+cartopy
+regionmask
