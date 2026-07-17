@@ -95,7 +95,6 @@ def download_file(
             ):
 
                 if chunk:
-
                     file.write(chunk)
                     progress.update(len(chunk))
 
