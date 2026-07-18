@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 import json
-from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -12,15 +11,7 @@ from compowater.paths import PROJECT_ROOT, DATASETS_CONFIG, MANIFEST_PATH
 from compowater.download.http import download_file
 from compowater.download.parallel import download_many
 from compowater.download.noaa_nclimgrid import build_tasks
-
-
-@dataclass(frozen=True)
-class DatasetTask:
-    name: str
-    source_page: str
-    url: str
-    destination: Path
-    sha256: str | None = None
+from compowater.download.tasks import DatasetTask
 
 
 def load_tasks(config_path: Path = DATASETS_CONFIG) -> list[DatasetTask]:
@@ -65,8 +56,8 @@ def _append_manifest(task: DatasetTask, digest: str) -> None:
 def download_all(
     max_workers: int = 4,
     include_noaa: bool = True,
-    noaa_start_year: int = 1991,
-    noaa_end_year: int = 2025,
+    noaa_start_year: int = 1951,
+    noaa_end_year: int = 2026,
 ):
     tasks = load_tasks()
     if include_noaa:
