@@ -11,6 +11,7 @@ import yaml
 from compowater.paths import PROJECT_ROOT, DATASETS_CONFIG, MANIFEST_PATH
 from compowater.download.http import download_file
 from compowater.download.parallel import download_many
+from compowater.download.noaa_nclimgrid import build_tasks
 
 
 @dataclass(frozen=True)
@@ -61,8 +62,16 @@ def _append_manifest(task: DatasetTask, digest: str) -> None:
         file.write(json.dumps(entry) + "\n")
 
 
-def download_all(max_workers: int = 4):
-    return download_many(load_tasks(), _fetch_and_record, max_workers=max_workers)
+def download_all(
+    max_workers: int = 4,
+    include_noaa: bool = True,
+    noaa_start_year: int = 1991,
+    noaa_end_year: int = 2025,
+):
+    tasks = load_tasks()
+    if include_noaa:
+        tasks += build_tasks(noaa_start_year, noaa_end_year)
+    return download_many(tasks, _fetch_and_record, max_workers=max_workers)
 
 
 if __name__ == "__main__":
