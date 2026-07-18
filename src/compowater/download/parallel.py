@@ -1,52 +1,31 @@
-"""
-Parallel download utilities.
-"""
+"""Parallel download utilities."""
 
-from concurrent.futures import ThreadPoolExecutor
-from concurrent.futures import as_completed
+from __future__ import annotations
+from collections.abc import Callable, Iterable
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import TypeVar
 
 from tqdm import tqdm
 
+TaskT = TypeVar("TaskT")
+ResultT = TypeVar("ResultT")
+
 
 def download_many(
-    tasks,
-    worker,
-    max_workers=8,
-):
+    tasks: Iterable[TaskT],
+    worker: Callable[[TaskT], ResultT],
+    max_workers: int = 8,
+) -> list[ResultT]:
     """
-    Execute download tasks concurrently.
+    Execute tasks concurrently.
 
-    Parameters
-    ----------
-    tasks
-        Iterable of task definitions.
-
-    worker
-        Function receiving one task.
-
-    max_workers
-        Number of concurrent workers.
+    Returns results in *completion* order, not submission order — if
+    downstream code needs task[i] <-> result[i] correspondence, sort
+    by a task identifier afterward rather than assuming index alignment.
     """
-
-    results = []
-
-    with ThreadPoolExecutor(
-        max_workers=max_workers
-    ) as executor:
-
-        futures = {
-            executor.submit(worker, task): task
-            for task in tasks
-        }
-
-        for future in tqdm(
-            as_completed(futures),
-            total=len(futures),
-            desc="Downloading",
-        ):
-
-            results.append(
-                future.result()
-            )
-
+    results: list[ResultT] = []
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {executor.submit(worker, task): task for task in tasks}
+        for future in tqdm(as_completed(futures), total=len(futures), desc="Downloading"):
+            results.append(future.result())
     return results
