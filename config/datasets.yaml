@@ -1,0 +1,10 @@
+datasets:
+  - name: "CA DWR - Daily SWP Reservoir Elevation and Storage"
+    source_page: "https://data.ca.gov/dataset/daily-swp-reservoir-elevation-and-storage-data"
+    url: "https://data.cnra.ca.gov/dataset/6d8745c3-b781-4b95-93b6-a8b5b6f70cd5/resource/afdfdc5b-ad81-4d98-bcd1-e65200ef36d6/download/reservoir_elevation_storage_ab1755.csv"
+    destination: "data/raw/reservoirs/reservoir_elevation_storage_ab1755.csv"
+
+  - name: "CA SWRCB - Urban Retail Water Supplier Supply & Demand"
+    source_page: "https://data.ca.gov/dataset/urws-conservation-supply-demand"
+    url: "https://data.ca.gov/dataset/c69ac02b-adfb-459a-bc58-bf69a8b572d2/resource/f4d50112-5fb5-4066-b45c-44696b10a49e/download/monthly_combined_dataset.csv"
+    destination: "data/raw/urban_water/monthly_combined_dataset.csv"

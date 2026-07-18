@@ -26,6 +26,11 @@ ALL_DATA_DIRS = (
     RAW_DATA_CLIMATE_DIR, RAW_DATA_RESERVOIRS_DIR, RAW_DATA_URBAN_WATER_DIR,
 )
 
+CONFIG = PROJECT_ROOT / "config"
+
+DATASETS_CONFIG = CONFIG / "datasets.yaml"
+MANIFEST_PATH = RAW_DATA_DIR / "_manifest.jsonl"
+
 
 def ensure_data_dirs() -> None:
     """Create all project data directories if they don't already exist."""
