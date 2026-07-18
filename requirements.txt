@@ -16,5 +16,7 @@ cartopy
 regionmask
 
 requests
+requests-mock
 tqdm
 notebook
+pytest

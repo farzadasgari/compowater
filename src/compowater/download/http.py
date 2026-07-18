@@ -37,19 +37,6 @@ def download_file(
     overwrite: bool = False,
     session: requests.Session | None = None,
 ) -> tuple[Path, str]:
-    """
-    Download a file and return (path, sha256_hash).
-
-    Parameters
-    ----------
-    expected_sha256
-        Only set this for known-static archives. For "living" sources
-        that update in place (e.g. monthly-refreshed CSVs), leave this
-        None — record the returned hash into a manifest instead.
-    session
-        Reuse a session across many calls (see download_many) instead
-        of opening a new connection pool per file.
-    """
     destination.parent.mkdir(parents=True, exist_ok=True)
 
     if destination.exists() and not overwrite:
@@ -64,24 +51,35 @@ def download_file(
     total = int(response.headers.get("content-length", 0))
     hasher = hashlib.sha256()
 
-    with open(destination, "wb") as file, tqdm(
-        total=total, unit="B", unit_scale=True, unit_divisor=1024,
-        desc=destination.name,
-    ) as progress:
-        for chunk in response.iter_content(chunk_size=CHUNK_SIZE):
-            if chunk:
-                file.write(chunk)
-                hasher.update(chunk)
-                progress.update(len(chunk))
+    # Write to a sibling temp file first. A crash or dropped connection
+    # mid-stream then leaves no file at `destination` at all — instead
+    # of a truncated one that overwrite=False would mistake for good data.
+    tmp_destination = destination.with_name(destination.name + ".part")
 
-    digest = hasher.hexdigest()
+    try:
+        with open(tmp_destination, "wb") as file, tqdm(
+            total=total, unit="B", unit_scale=True, unit_divisor=1024,
+            desc=destination.name,
+        ) as progress:
+            for chunk in response.iter_content(chunk_size=CHUNK_SIZE):
+                if chunk:
+                    file.write(chunk)
+                    hasher.update(chunk)
+                    progress.update(len(chunk))
 
-    if expected_sha256 is not None and digest != expected_sha256:
-        destination.unlink(missing_ok=True)
-        raise ValueError(
-            f"Checksum mismatch for {destination.name}: "
-            f"expected {expected_sha256}, got {digest}. File removed."
-        )
+        digest = hasher.hexdigest()
+
+        if expected_sha256 is not None and digest != expected_sha256:
+            raise ValueError(
+                f"Checksum mismatch for {destination.name}: "
+                f"expected {expected_sha256}, got {digest}."
+            )
+
+        tmp_destination.replace(destination)  # atomic on POSIX and Windows
+
+    except Exception:
+        tmp_destination.unlink(missing_ok=True)
+        raise
 
     logger.info("Saved %s (sha256=%s)", destination, digest)
     return destination, digest
