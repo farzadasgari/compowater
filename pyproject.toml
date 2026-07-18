@@ -1,0 +1,35 @@
+# pyproject.toml
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "compowater"
+version = "0.1.0"
+description = "Compound extreme events and urban water supply/demand in California"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "scipy",
+    "pandas",
+    "xarray",
+    "netCDF4",
+    "matplotlib",
+    "seaborn",
+    "geopandas",
+    "shapely",
+    "rasterio",
+    "rioxarray",
+    "pyproj",
+    "cartopy",
+    "regionmask",
+    "requests",
+    "requests-mock",
+    "tqdm",
+    "notebook",
+    "pytest",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
