@@ -10,6 +10,8 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from tqdm import tqdm
 
+from compowater.download.exceptions import ResourceNotFoundError
+
 logger = logging.getLogger(__name__)
 TIMEOUT = 60
 CHUNK_SIZE = 8192
@@ -46,6 +48,8 @@ def download_file(
     logger.info("Downloading %s from %s", dataset_name, source_page)
     active_session = session or create_session()
     response = active_session.get(url, stream=True, timeout=TIMEOUT)
+    if response.status_code == 404:
+        raise ResourceNotFoundError(f"404 Not Found: {url}")
     response.raise_for_status()
 
     total = int(response.headers.get("content-length", 0))
