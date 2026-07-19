@@ -25,6 +25,7 @@ venv/
 .vscode/
 
 # Jupyter Notebook
+notebooks/*.ipynb
 .ipynb_checkpoints/
 
 # Operating system files
