@@ -18,5 +18,5 @@ This repo follows [Conventional Commits](https://www.conventionalcommits.org/):
 `feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`, `ci:`.
 
 ## Code style
-Python 3.11+, PEP 8, type hints on public functions. Run the test
+Python 3.12+, PEP 8, type hints on public functions. Run the test
 suite locally before submitting (see [Testing](README.md#testing)).
