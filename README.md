@@ -6,6 +6,7 @@
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 ![Python](https://img.shields.io/badge/Python-3.12%2B-blue.svg)
 ![Status](https://img.shields.io/badge/Status-Research%20Development-orange.svg)
+![CI](https://github.com/farzadasgari/compowater/actions/workflows/ci.yml/badge.svg)
 
 </div>
 
