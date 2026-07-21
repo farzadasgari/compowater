@@ -96,3 +96,24 @@ def test_download_all_merges_yaml_and_noaa_tasks(monkeypatch):
         include_noaa=True)) == 2   # CA + NOAA
     assert len(registry_module.download_all(
         include_noaa=False)) == 1  # CA only
+
+
+def test_download_all_does_not_mutate_the_list_returned_by_load_tasks(monkeypatch):
+    shared_yaml_tasks = [DatasetTask(
+        name="CA Task", source_page="p", url="u", destination=Path("d"))]
+    noaa_tasks = [DatasetTask(
+        name="NOAA Task", source_page="p", url="u", destination=Path("d"))]
+
+    monkeypatch.setattr(registry_module, "load_tasks",
+                        lambda: shared_yaml_tasks)
+    monkeypatch.setattr(registry_module, "build_tasks",
+                        lambda start, end: noaa_tasks)
+    monkeypatch.setattr(registry_module, "download_many",
+                        lambda tasks, worker, max_workers: tasks)
+
+    registry_module.download_all(include_noaa=True)
+
+    # Regression guard: a future load_tasks() (e.g. a cached/memoized
+    # version) could return the same list object on every call.
+    # download_all must never mutate what it was handed.
+    assert len(shared_yaml_tasks) == 1
