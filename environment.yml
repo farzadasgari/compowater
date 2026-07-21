@@ -1,0 +1,28 @@
+name: compowater
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.11
+  - numpy
+  - scipy
+  - pandas
+  - xarray
+  - netcdf4
+  - matplotlib
+  - seaborn
+  - geopandas
+  - shapely
+  - rasterio
+  - rioxarray
+  - pyproj
+  - cartopy
+  - regionmask
+  - requests
+  - tqdm
+  - pyyaml
+  - notebook
+  - pytest
+  - pip
+  - pip:
+      - requests-mock
