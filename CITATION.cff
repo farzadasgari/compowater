@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Compowater: Compound Drought–Heat Extremes and Urban Water Resilience"
+authors:
+  - family-names: "Asgari"
+    given-names: "Farzad"
+    orcid: "https://orcid.org/0009-0008-3800-0408"
+  - family-names: "Mohajeri"
+    given-names: "Seyed Hossein"
+    orcid: "https://orcid.org/0000-0002-8056-293X"
+  - family-names: "Nikoo"
+    given-names: "Mohammad Reza"
+    orcid: "https://orcid.org/0000-0002-3740-4389"
+repository-code: "https://github.com/farzadasgari/compowater"
+license: Apache-2.0
+version: 0.1.0
+date-released: 2026-07-21
