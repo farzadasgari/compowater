@@ -2,10 +2,11 @@
 Tests for compowater.download.registry.
 
 monkeypatching the place a function is used,
-not the place it's defined. 
+not the place it's defined.
 """
 
 from __future__ import annotations
+
 import json
 from pathlib import Path
 
@@ -17,12 +18,14 @@ from compowater.download.tasks import DatasetTask
 
 def test_load_tasks_parses_yaml_into_dataset_tasks(tmp_path):
     config = {
-        "datasets": [{
-            "name": "Fake Dataset",
-            "source_page": "https://example.gov/page",
-            "url": "https://example.gov/data.csv",
-            "destination": "data/raw/fake/data.csv",
-        }]
+        "datasets": [
+            {
+                "name": "Fake Dataset",
+                "source_page": "https://example.gov/page",
+                "url": "https://example.gov/data.csv",
+                "destination": "data/raw/fake/data.csv",
+            }
+        ]
     }
     config_path = tmp_path / "datasets.yaml"
     config_path.write_text(yaml.dump(config))
@@ -34,7 +37,9 @@ def test_load_tasks_parses_yaml_into_dataset_tasks(tmp_path):
     assert tasks[0].sha256 is None
 
 
-def test_fetch_and_record_calls_download_file_and_writes_manifest(tmp_path, monkeypatch):
+def test_fetch_and_record_calls_download_file_and_writes_manifest(
+    tmp_path, monkeypatch
+):
     fake_manifest = tmp_path / "_manifest.jsonl"
     monkeypatch.setattr(registry_module, "MANIFEST_PATH", fake_manifest)
 
@@ -44,7 +49,8 @@ def test_fetch_and_record_calls_download_file_and_writes_manifest(tmp_path, monk
     monkeypatch.setattr(registry_module, "download_file", fake_download_file)
 
     task = DatasetTask(
-        name="Fake Dataset", source_page="https://example.gov",
+        name="Fake Dataset",
+        source_page="https://example.gov",
         url="https://example.gov/data.csv",
         destination=registry_module.PROJECT_ROOT / "data" / "raw" / "fake.csv",
     )
@@ -69,7 +75,8 @@ def test_fetch_and_record_skips_and_returns_none_on_404(tmp_path, monkeypatch):
     monkeypatch.setattr(registry_module, "download_file", raise_not_found)
 
     task = DatasetTask(
-        name="Not Yet Published", source_page="https://example.gov",
+        name="Not Yet Published",
+        source_page="https://example.gov",
         url="https://example.gov/future.csv",
         destination=registry_module.PROJECT_ROOT / "data" / "raw" / "future.csv",
     )
@@ -81,35 +88,38 @@ def test_fetch_and_record_skips_and_returns_none_on_404(tmp_path, monkeypatch):
 
 
 def test_download_all_merges_yaml_and_noaa_tasks(monkeypatch):
-    fake_yaml_tasks = [DatasetTask(
-        name="CA Task", source_page="p", url="u", destination=Path("d"))]
-    fake_noaa_tasks = [DatasetTask(
-        name="NOAA Task", source_page="p", url="u", destination=Path("d"))]
+    fake_yaml_tasks = [
+        DatasetTask(name="CA Task", source_page="p", url="u", destination=Path("d"))
+    ]
+    fake_noaa_tasks = [
+        DatasetTask(name="NOAA Task", source_page="p", url="u", destination=Path("d"))
+    ]
 
     monkeypatch.setattr(registry_module, "load_tasks", lambda: fake_yaml_tasks)
-    monkeypatch.setattr(registry_module, "build_tasks",
-                        lambda start, end: fake_noaa_tasks)
-    monkeypatch.setattr(registry_module, "download_many",
-                        lambda tasks, worker, max_workers: tasks)
+    monkeypatch.setattr(
+        registry_module, "build_tasks", lambda start, end: fake_noaa_tasks
+    )
+    monkeypatch.setattr(
+        registry_module, "download_many", lambda tasks, worker, max_workers: tasks
+    )
 
-    assert len(registry_module.download_all(
-        include_noaa=True)) == 2   # CA + NOAA
-    assert len(registry_module.download_all(
-        include_noaa=False)) == 1  # CA only
+    assert len(registry_module.download_all(include_noaa=True)) == 2  # CA + NOAA
+    assert len(registry_module.download_all(include_noaa=False)) == 1  # CA only
 
 
 def test_download_all_does_not_mutate_the_list_returned_by_load_tasks(monkeypatch):
-    shared_yaml_tasks = [DatasetTask(
-        name="CA Task", source_page="p", url="u", destination=Path("d"))]
-    noaa_tasks = [DatasetTask(
-        name="NOAA Task", source_page="p", url="u", destination=Path("d"))]
+    shared_yaml_tasks = [
+        DatasetTask(name="CA Task", source_page="p", url="u", destination=Path("d"))
+    ]
+    noaa_tasks = [
+        DatasetTask(name="NOAA Task", source_page="p", url="u", destination=Path("d"))
+    ]
 
-    monkeypatch.setattr(registry_module, "load_tasks",
-                        lambda: shared_yaml_tasks)
-    monkeypatch.setattr(registry_module, "build_tasks",
-                        lambda start, end: noaa_tasks)
-    monkeypatch.setattr(registry_module, "download_many",
-                        lambda tasks, worker, max_workers: tasks)
+    monkeypatch.setattr(registry_module, "load_tasks", lambda: shared_yaml_tasks)
+    monkeypatch.setattr(registry_module, "build_tasks", lambda start, end: noaa_tasks)
+    monkeypatch.setattr(
+        registry_module, "download_many", lambda tasks, worker, max_workers: tasks
+    )
 
     registry_module.download_all(include_noaa=True)
 

@@ -9,8 +9,8 @@ datasets into a single pipeline run.
 
 from __future__ import annotations
 
-from compowater.paths import RAW_DATA_CLIMATE_DIR
 from compowater.download.tasks import DatasetTask
+from compowater.paths import RAW_DATA_CLIMATE_DIR
 
 BASE_URL = "https://www.ncei.noaa.gov/data/nclimgrid-daily/access/grids"
 SOURCE_PAGE = "https://www.ncei.noaa.gov/products/land-based-station/nclimgrid-daily"

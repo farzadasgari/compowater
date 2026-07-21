@@ -7,6 +7,7 @@ point it at tmp_path instead.
 """
 
 from __future__ import annotations
+
 import compowater.paths as paths_module
 
 
@@ -17,7 +18,8 @@ def test_project_root_contains_expected_top_level_folders():
 
 def test_ensure_data_dirs_creates_all_declared_directories(tmp_path, monkeypatch):
     fake_dirs = tuple(
-        tmp_path / f"dir_{i}" for i in range(len(paths_module.ALL_DATA_DIRS)))
+        tmp_path / f"dir_{i}" for i in range(len(paths_module.ALL_DATA_DIRS))
+    )
     monkeypatch.setattr(paths_module, "ALL_DATA_DIRS", fake_dirs)
 
     for d in fake_dirs:

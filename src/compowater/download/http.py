@@ -1,14 +1,15 @@
 """HTTP download utilities with retry, progress, and checksum provenance."""
 
 from __future__ import annotations
+
 import hashlib
 import logging
 from pathlib import Path
 
 import requests
 from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
 from tqdm import tqdm
+from urllib3.util.retry import Retry
 
 from compowater.download.exceptions import ResourceNotFoundError
 
@@ -19,9 +20,12 @@ CHUNK_SIZE = 8192
 
 def create_session() -> requests.Session:
     """Create a requests session with automatic retries on transient errors."""
-    retry = Retry(total=3, backoff_factor=1,
-                  status_forcelist=(500, 502, 503, 504),
-                  allowed_methods=("GET",))
+    retry = Retry(
+        total=3,
+        backoff_factor=1,
+        status_forcelist=(500, 502, 503, 504),
+        allowed_methods=("GET",),
+    )
     adapter = HTTPAdapter(max_retries=retry)
     session = requests.Session()
     session.mount("http://", adapter)
@@ -61,10 +65,16 @@ def download_file(
     tmp_destination = destination.with_name(destination.name + ".part")
 
     try:
-        with open(tmp_destination, "wb") as file, tqdm(
-            total=total, unit="B", unit_scale=True, unit_divisor=1024,
-            desc=destination.name,
-        ) as progress:
+        with (
+            open(tmp_destination, "wb") as file,
+            tqdm(
+                total=total,
+                unit="B",
+                unit_scale=True,
+                unit_divisor=1024,
+                desc=destination.name,
+            ) as progress,
+        ):
             for chunk in response.iter_content(chunk_size=CHUNK_SIZE):
                 if chunk:
                     file.write(chunk)
@@ -90,7 +100,10 @@ def download_file(
 
 
 def _sha256_of(path: Path) -> str:
-    """Compute a file's SHA-256 hash, streaming to avoid loading it fully into memory."""
+    """
+    Compute a file's SHA-256 hash,
+    streaming to avoid loading it fully into memory.
+    """
     hasher = hashlib.sha256()
     with open(path, "rb") as file:
         for chunk in iter(lambda: file.read(CHUNK_SIZE), b""):

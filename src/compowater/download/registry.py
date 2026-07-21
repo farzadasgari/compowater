@@ -1,19 +1,20 @@
 """Single source of truth for what gets downloaded, from where, to where."""
 
 from __future__ import annotations
+
 import json
+import logging
 from datetime import datetime, timezone
 from pathlib import Path
-import logging
+
 import yaml
 
-from compowater.paths import PROJECT_ROOT, DATASETS_CONFIG, MANIFEST_PATH
-from compowater.download.http import download_file
-from compowater.download.parallel import download_many
-from compowater.download.noaa_nclimgrid import build_tasks
-from compowater.download.tasks import DatasetTask
 from compowater.download.exceptions import ResourceNotFoundError
-
+from compowater.download.http import download_file
+from compowater.download.noaa_nclimgrid import build_tasks
+from compowater.download.parallel import download_many
+from compowater.download.tasks import DatasetTask
+from compowater.paths import DATASETS_CONFIG, MANIFEST_PATH, PROJECT_ROOT
 
 logger = logging.getLogger(__name__)
 
@@ -36,8 +37,10 @@ def load_tasks(config_path: Path = DATASETS_CONFIG) -> list[DatasetTask]:
 def _fetch_and_record(task: DatasetTask) -> tuple[Path, str] | None:
     try:
         path, digest = download_file(
-            dataset_name=task.name, source_page=task.source_page,
-            url=task.url, destination=task.destination,
+            dataset_name=task.name,
+            source_page=task.source_page,
+            url=task.url,
+            destination=task.destination,
             expected_sha256=task.sha256,
         )
     except ResourceNotFoundError as exc:
@@ -48,7 +51,10 @@ def _fetch_and_record(task: DatasetTask) -> tuple[Path, str] | None:
 
 
 def _append_manifest(task: DatasetTask, digest: str) -> None:
-    """Record provenance: what was downloaded, from where, and its hash at that moment."""
+    """
+    Record provenance
+    what was downloaded, from where, and its hash at that moment.
+    """
     MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
     entry = {
         "name": task.name,
@@ -77,7 +83,8 @@ def download_all(
 
     logger.warning(
         "download_all complete: %d succeeded, %d skipped (not yet available)",
-        len(succeeded), len(results) - len(succeeded),
+        len(succeeded),
+        len(results) - len(succeeded),
     )
     return succeeded
 

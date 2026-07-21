@@ -1,6 +1,7 @@
 """Parallel download utilities."""
 
 from __future__ import annotations
+
 from collections.abc import Callable, Iterable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import TypeVar
@@ -26,6 +27,8 @@ def download_many(
     results: list[ResultT] = []
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = {executor.submit(worker, task): task for task in tasks}
-        for future in tqdm(as_completed(futures), total=len(futures), desc="Downloading"):
+        for future in tqdm(
+            as_completed(futures), total=len(futures), desc="Downloading"
+        ):
             results.append(future.result())
     return results

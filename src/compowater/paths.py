@@ -6,6 +6,7 @@ I/O on import.
 """
 
 from __future__ import annotations
+
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -22,8 +23,13 @@ RAW_DATA_RESERVOIRS_DIR = RAW_DATA_DIR / "reservoirs"
 RAW_DATA_URBAN_WATER_DIR = RAW_DATA_DIR / "urban_water"
 
 ALL_DATA_DIRS = (
-    DATA_DIR, RAW_DATA_DIR, INTERMEDIATE_DATA_DIR, PROCESSED_DATA_DIR,
-    RAW_DATA_CLIMATE_DIR, RAW_DATA_RESERVOIRS_DIR, RAW_DATA_URBAN_WATER_DIR,
+    DATA_DIR,
+    RAW_DATA_DIR,
+    INTERMEDIATE_DATA_DIR,
+    PROCESSED_DATA_DIR,
+    RAW_DATA_CLIMATE_DIR,
+    RAW_DATA_RESERVOIRS_DIR,
+    RAW_DATA_URBAN_WATER_DIR,
 )
 
 CONFIG = PROJECT_ROOT / "config"

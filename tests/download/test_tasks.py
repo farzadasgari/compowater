@@ -5,6 +5,7 @@ Confirming a dataclass behaves the way its definition promises.
 """
 
 from __future__ import annotations
+
 from pathlib import Path
 
 import pytest
@@ -14,7 +15,8 @@ from compowater.download.tasks import DatasetTask
 
 def test_dataset_task_holds_the_values_it_was_given():
     task = DatasetTask(
-        name="Test Dataset", source_page="https://example.gov",
+        name="Test Dataset",
+        source_page="https://example.gov",
         url="https://example.gov/data.csv",
         destination=Path("data/raw/example/data.csv"),
     )
@@ -25,7 +27,8 @@ def test_dataset_task_holds_the_values_it_was_given():
 
 def test_dataset_task_is_immutable():
     task = DatasetTask(
-        name="Test Dataset", source_page="https://example.gov",
+        name="Test Dataset",
+        source_page="https://example.gov",
         url="https://example.gov/data.csv",
         destination=Path("data/raw/example/data.csv"),
     )

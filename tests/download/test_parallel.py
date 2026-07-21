@@ -7,6 +7,7 @@ that a failing worker still surfaces its exception to the caller.
 """
 
 from __future__ import annotations
+
 from compowater.download.parallel import download_many
 
 
