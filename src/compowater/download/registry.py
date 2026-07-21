@@ -67,12 +67,14 @@ def download_all(
     noaa_start_year: int = 1991,
     noaa_end_year: int = 2026,
 ):
-    tasks = load_tasks()
+    tasks = list(load_tasks())
+
     if include_noaa:
         tasks += build_tasks(noaa_start_year, noaa_end_year)
 
     results = download_many(tasks, _fetch_and_record, max_workers=max_workers)
     succeeded = [r for r in results if r is not None]
+
     logger.warning(
         "download_all complete: %d succeeded, %d skipped (not yet available)",
         len(succeeded), len(results) - len(succeeded),
