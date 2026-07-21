@@ -20,3 +20,5 @@ requests-mock
 tqdm
 notebook
 pytest
+ruff
+black

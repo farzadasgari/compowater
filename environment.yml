@@ -23,6 +23,8 @@ dependencies:
   - pyyaml
   - notebook
   - pytest
+  - ruff
+  - black
   - pip
   - pip:
       - requests-mock
